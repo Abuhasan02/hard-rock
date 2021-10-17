@@ -1,14 +1,20 @@
-const searchMusic =async () => {
+const searchMusic = async () => {
   const searchInput = document.getElementById("searchInput").value;
   const url = `https://api.lyrics.ovh/suggest/${searchInput}`;
-    const res =await fetch(url)
-    const data =await res.json();
+  try{
+    const res = await fetch(url);
+    const data = await res.json();
     showData(data.data);
+  }
+  catch{
+      displayError("Failed to load data.Please try again later!!!")
+  }
+  
 };
 
-const showData =async (songs) => {
+const showData = async (songs) => {
   const singleResult = document.querySelector(".search-result");
-  singleResult.innerHTML = '';
+  singleResult.innerHTML = "";
   songs.forEach((song) => {
     const songDiv = document.createElement("div");
     songDiv.className = `single-result row align-items-center my-3 p-3`;
@@ -28,16 +34,20 @@ const showData =async (songs) => {
     singleResult.appendChild(songDiv);
   });
 };
-const getLyrics =async (title, artist) => {
+const getLyrics = async (title, artist) => {
   const url = `https://api.lyrics.ovh/v1/${artist}/${title}`;
-     const res =await fetch(url)
-    const data =await res.json();
-    showLyrics(data.lyrics);
+  const res = await fetch(url);
+  const data = await res.json();
+  showLyrics(data.lyrics);
 };
 
-const showLyrics =async lyric => {
-    const lyricDiv = document.querySelector(".single-lyrics");
-    const p = document.createElement('p');
-    p.innerText = lyric;
-    lyricDiv.appendChild(p);
-}
+const showLyrics = async (lyric) => {
+  const lyricDiv = document.querySelector(".single-lyrics");
+  const p = document.createElement("p");
+  p.innerText = lyric;
+  lyricDiv.appendChild(p);
+};
+const displayError = (error) => {
+  const err = document.getElementById("error");
+  err.innerHTML = error;
+};
