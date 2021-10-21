@@ -1,15 +1,22 @@
+document
+  .getElementById("searchInput")
+  .addEventListener("keyup", function (event) {
+    event.preventDefault();
+    if (event.key === 'Enter') {
+      document.getElementById("searchBtn").click();
+    }
+  });
 const searchMusic = async () => {
   const searchInput = document.getElementById("searchInput").value;
   const url = `https://api.lyrics.ovh/suggest/${searchInput}`;
-  try{
+  toggleSpinner();
+  try {
     const res = await fetch(url);
     const data = await res.json();
     showData(data.data);
+  } catch {
+    displayError("Failed to load data.Please try again later!!!");
   }
-  catch{
-      displayError("Failed to load data.Please try again later!!!")
-  }
-  
 };
 
 const showData = async (songs) => {
@@ -32,6 +39,7 @@ const showData = async (songs) => {
                    
    `;
     singleResult.appendChild(songDiv);
+    toggleSpinner();
   });
 };
 const getLyrics = async (title, artist) => {
@@ -50,4 +58,8 @@ const showLyrics = async (lyric) => {
 const displayError = (error) => {
   const err = document.getElementById("error");
   err.innerHTML = error;
+};
+const toggleSpinner = () => {
+  const toggle_spinner = document.getElementById("spinner");
+  toggle_spinner.classList.toggle("d-none");
 };
